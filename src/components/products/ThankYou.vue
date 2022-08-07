@@ -3,7 +3,7 @@
     <div class="modal" :class="{ sale: theme === 'sale' }">
       <Spinner  v-if="showSpinner"/>
       <h1 class="thanks" v-if="showThankYou">{{ thankYouMessage }}</h1>
-      
+      <h1 class="nope" v-if="showErrorMessage">{{ errorMessage }}</h1>
     </div>
   </div>
 </template>
@@ -20,7 +20,9 @@ export default {
       showSpinner: false,
       showThankYou: false,
       // responseFromCart: 200,
-      thankYouMessage: 'Thank You!'
+      thankYouMessage: 'Thank You!',
+      showErrorMessage: false,
+      errorMessage: 'Error!'
     }
   },
   methods: {
@@ -31,17 +33,18 @@ export default {
    async mounted() {
     console.log('The response status from CART.vue is ' + this.responseFromCart)
       if(this.responseFromCart !== 200){
-        this.thankYouMessage = 'Error!'
-      }
-
-      this.showSpinner = true;
-      await new Promise(resolve => {
-        setTimeout(resolve, 2000)
-      })
-      this.showSpinner = false;
-      this.showThankYou = true;
+        this.showErrorMessage = true;
+        this.showThankYou = false;
+      } else {
+          await new Promise(resolve => {
+            this.showSpinner = true;
+            setTimeout(resolve, 2000)
+        })
+        this.showThankYou = true;
+        this.showSpinner = false;
       }
   }
+}
 </script>
 
 <style>
@@ -61,6 +64,22 @@ export default {
 }
 .modal h1 {
   color: black;
+  border: none;
+  padding: 0;
+  font-size: 30px;
+  text-align: center;
+}
+
+.modal .thanks {
+  color: green;
+  border: none;
+  padding: 0;
+  font-size: 30px;
+  text-align: center;
+}
+
+.modal .nope {
+  color: red;
   border: none;
   padding: 0;
   font-size: 30px;
