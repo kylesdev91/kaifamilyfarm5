@@ -2,7 +2,7 @@
   <div class="backdrop" @click="closeThankYou">
     <div class="modal" :class="{ sale: theme === 'sale' }">
       <Spinner  v-if="showSpinner"/>
-      <h1 class="thanks" v-if="showThankYou">Thank you!</h1>
+      <h1 class="thanks" v-if="showThankYou">{{ thankYouMessage }}</h1>
     </div>
   </div>
 </template>
@@ -10,13 +10,16 @@
 <script>
 import Spinner from '@/components/products/Spinner.vue'
 export default {
+  props: ['responseFromCart'],
   components: {
     Spinner
   },
   data() {
     return {
       showSpinner: false,
-      showThankYou: false
+      showThankYou: false,
+      // responseFromCart: 200,
+      thankYouMessage: 'Thank You!'
     }
   },
   methods: {
@@ -25,20 +28,19 @@ export default {
     },
   },
    async mounted() {
-      if(this.showThankYou === this.showSpinner) {
+    console.log('The response status from CART.vue is ' + this.responseFromCart)
+      if(this.responseFromCart !== 200){
+        this.thankYouMessage = 'Error!'
+      }
+
       this.showSpinner = true;
       await new Promise(resolve => {
         setTimeout(resolve, 2000)
       })
       this.showSpinner = false;
       this.showThankYou = true;
-      console.log('Success!')
-      } else {
-        this.showThankYou = 'Error!'
-        console.log('Error!')
       }
   }
-};
 </script>
 
 <style>

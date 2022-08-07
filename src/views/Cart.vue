@@ -1,8 +1,9 @@
 <template>
   <div style="margin-top: 35px; height: 2000px">
     <ThankYou
-      v-if="showThankYouModal"
-      @close="showThankYouModal = false"
+      v-if="showMsg"
+      @close="showMsg = false"
+      :responseFromCart=responseFromCart
     ></ThankYou>
     <CartItemCard
       v-for="product in products"
@@ -53,7 +54,9 @@ export default {
       name: '',
       btnLabel: 'Submit',
       orderStatus: '',
-      showThankYouModal: false,
+      showMsg: false,
+      axiosStatus: '',
+      responseFromCart: '',
       // items: items,
       userInfo: {
         type: Object,
@@ -72,7 +75,7 @@ export default {
     this.userInfo = await this.getUserInfo();
   },
   methods: {
-    sendEmail() {
+    async sendEmail() {
       var date = new Date().toLocaleString();
       if (this.btnLabel === 'Submit') {
         // console.log(this.userInfo.userDetails);
@@ -93,13 +96,17 @@ export default {
           orderTotal: 'Total: ' + '$' + this.$store.getters.cartTotal,
           emailAddress: this.userInfo.userDetails,
         };
-        axios.post('/api/sendemail', formData).then((response) => {
-          console.log(response);
-        });
-        // console.log('this.name is ' + this.name);
-        this.btnLabel = 'Re-Order';
-        this.showThankYouModal = true;
-        this.orderStatus = 'Order sent on ' + date;
+        try {
+          await axios.post('/api/sendemail', formData).then((response) => {
+            this.responseFromCart = response.status
+          });
+          this.btnLabel = 'Re-Order';
+          this.showMsg = true;
+          this.orderStatus = 'Order sent on ' + date;
+        } catch {
+          this.showMsg = true;
+        }
+
       } else if (this.btnLabel === 'Re-Order') {
         this.orderStatus = '';
         this.btnLabel = 'Submit';
