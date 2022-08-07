@@ -25,12 +25,18 @@ export default {
     },
   },
    async mounted() {
+      if(this.showThankYou === this.showSpinner) {
       this.showSpinner = true;
       await new Promise(resolve => {
         setTimeout(resolve, 2000)
       })
       this.showSpinner = false;
       this.showThankYou = true;
+      console.log('Success!')
+      } else {
+        this.showThankYou = 'Error!'
+        console.log('Error!')
+      }
   }
 };
 </script>
