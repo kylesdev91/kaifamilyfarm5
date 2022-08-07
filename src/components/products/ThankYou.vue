@@ -3,6 +3,7 @@
     <div class="modal" :class="{ sale: theme === 'sale' }">
       <Spinner  v-if="showSpinner"/>
       <h1 class="thanks" v-if="showThankYou">{{ thankYouMessage }}</h1>
+      
     </div>
   </div>
 </template>

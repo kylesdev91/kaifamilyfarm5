@@ -10,7 +10,7 @@
   margin: 30px auto;
   border: 3px solid transparent;
   border-radius: 50%;
-  border-top-color: green;
+  border-top-color: black;
   animation: spin 1s ease infinite;
 }
 
